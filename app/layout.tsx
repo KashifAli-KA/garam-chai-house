@@ -7,7 +7,7 @@ const body = Source_Serif_4({ subsets: ["latin"], variable: "--font-source" });
 
 export const metadata: Metadata = {
   title: "Garam Chai House | Chai and breakfast in Rahim Yar Khan",
-  description: "Hot chai and fresh breakfast from 6:30 am. Order ahead on WhatsApp.",
+  description: "Fresh breakfast and chai from 6 am. Dine in or take away.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
