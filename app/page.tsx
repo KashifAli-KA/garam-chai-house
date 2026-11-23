@@ -1,10 +1,27 @@
 import Image from "next/image";
 import { cafe, menu } from "./content";
-import { heroPhoto, gallery } from "./photos";
+import { heroPhoto, gallery, photoSrc } from "./photos";
 
 const whatsappLink = `https://wa.me/${cafe.whatsapp}?text=${encodeURIComponent(
   "Hello, I would like to order from Garam Chai House."
 )}`;
+
+const readyPhotos = gallery.filter((p) => p.ready);
+
+function Cup() {
+  return (
+    <svg viewBox="0 0 240 240" className="w-full max-w-xs" role="img" aria-label="A steaming cup of chai">
+      <g fill="none" stroke="#e6efea" strokeWidth="6" strokeLinecap="round">
+        <path className="steam" d="M90 82c-12-14 12-24 0-40" />
+        <path className="steam" d="M120 82c-12-14 12-24 0-40" />
+        <path className="steam" d="M150 82c-12-14 12-24 0-40" />
+      </g>
+      <path d="M50 105h140v38a62 62 0 0 1-62 62h-16a62 62 0 0 1-62-62z" fill="#f4b400" />
+      <path d="M190 122h12a24 24 0 0 1 0 48h-20" fill="none" stroke="#f4b400" strokeWidth="12" />
+      <ellipse cx="120" cy="222" rx="92" ry="10" fill="#c8325a" />
+    </svg>
+  );
+}
 
 export default function Home() {
   return (
@@ -37,18 +54,22 @@ export default function Home() {
             <p className="mt-6 text-base text-glass/80">Dine in or take away. 6 am to 2 pm. Closed on Fridays.</p>
           </div>
 
-          <div className="relative mx-auto w-full max-w-sm md:max-w-none">
-            <div aria-hidden className="absolute -bottom-3 -right-3 h-full w-full rounded-3xl bg-marigold" />
-            <Image
-              src={heroPhoto.src}
-              alt={heroPhoto.alt}
-              width={900}
-              height={1100}
-              priority
-              sizes="(min-width: 768px) 40vw, 90vw"
-              className="relative aspect-[4/5] w-full rounded-3xl object-cover"
-            />
-          </div>
+          {heroPhoto.ready ? (
+            <div className="relative mx-auto w-full max-w-sm md:max-w-none">
+              <div aria-hidden className="absolute -bottom-3 -right-3 h-full w-full rounded-3xl bg-marigold" />
+              <Image
+                src={photoSrc(heroPhoto)}
+                alt={heroPhoto.alt}
+                width={heroPhoto.w}
+                height={heroPhoto.h}
+                priority
+                sizes="(min-width: 768px) 40vw, 90vw"
+                className="relative aspect-[4/5] w-full rounded-3xl object-cover"
+              />
+            </div>
+          ) : (
+            <div className="flex justify-center"><Cup /></div>
+          )}
         </div>
       </header>
 
@@ -75,18 +96,19 @@ export default function Home() {
         </div>
       </section>
 
-      {gallery.length >= 3 && (
+      {readyPhotos.length >= 3 && (
         <section className="mx-auto max-w-6xl px-6 pb-14 md:pb-20">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {gallery.map((p) => (
+          <h2 className="font-display text-3xl font-bold sm:text-4xl md:text-5xl">From the counter</h2>
+          <div className="mt-8 columns-2 gap-4 md:columns-3 lg:columns-4">
+            {readyPhotos.map((p) => (
               <Image
-                key={p.src}
-                src={p.src}
+                key={p.file}
+                src={photoSrc(p)}
                 alt={p.alt}
-                width={800}
-                height={1000}
-                sizes="(min-width: 768px) 25vw, 50vw"
-                className="aspect-[4/5] w-full rounded-2xl object-cover"
+                width={p.w}
+                height={p.h}
+                sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+                className="mb-4 h-auto w-full break-inside-avoid rounded-2xl"
               />
             ))}
           </div>
@@ -122,9 +144,7 @@ export default function Home() {
 
       <footer className="bg-ink px-6 py-8 text-center text-glass">
         <p>{cafe.name}, {cafe.city}</p>
-        <p className="mt-2 text-sm text-glass/70">
-          Demo project by Kashif Ali, not a real business. Stock photos from Pexels.
-        </p>
+        <p className="mt-2 text-sm text-glass/70">Demo project by Kashif Ali, not a real business.</p>
       </footer>
     </main>
   );
