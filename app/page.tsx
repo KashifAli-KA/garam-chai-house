@@ -1,12 +1,15 @@
 import Image from "next/image";
 import { cafe, menu } from "./content";
-import { heroPhoto, gallery, photoSrc } from "./photos";
+import { heroPhoto, photoSrc } from "./photos";
+import { dishes, type Dish } from "./dishes";
+import OrderBuilder from "./OrderBuilder";
 
 const whatsappLink = `https://wa.me/${cafe.whatsapp}?text=${encodeURIComponent(
   "Hello, I would like to order from Garam Chai House."
 )}`;
 
-const readyPhotos = gallery.filter((p) => p.ready);
+const orderLink = (dish: Dish) =>
+  `https://wa.me/${cafe.whatsapp}?text=${encodeURIComponent(`Hello, I would like to order: ${dish.name}`)}`;
 
 function Cup() {
   return (
@@ -23,14 +26,51 @@ function Cup() {
   );
 }
 
+function DishCard({ dish }: { dish: Dish }) {
+  return (
+    <article
+      className={`flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-ink/10 ${
+        dish.wide ? "sm:col-span-2 lg:col-span-3 md:flex-row" : ""
+      }`}
+    >
+      <div className={`relative aspect-[4/3] ${dish.wide ? "md:aspect-auto md:min-h-80 md:w-2/5" : ""}`}>
+        <Image
+          src={`/images/${dish.file}`}
+          alt={dish.alt}
+          fill
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          className="object-cover"
+          style={{ objectPosition: dish.focus }}
+        />
+      </div>
+      <div className={`flex flex-1 flex-col p-5 ${dish.wide ? "md:justify-center md:p-10" : ""}`}>
+        <p className="font-semibold text-rose">{dish.category}</p>
+        <div className="mt-1 flex items-baseline justify-between gap-3">
+          <h3 className={`font-display font-bold ${dish.wide ? "text-3xl" : "text-xl"}`}>{dish.name}</h3>
+          {dish.price && <span className="shrink-0 whitespace-nowrap font-display text-lg font-bold">{dish.price}</span>}
+        </div>
+        <p className="mt-2 flex-1 text-ink/80">{dish.description}</p>
+        <a
+          href={orderLink(dish)}
+          className="mt-5 inline-block self-start rounded-full border-2 border-ink px-5 py-2 font-display font-bold hover:bg-ink hover:text-glass"
+        >
+          {dish.price ? "Order this" : "Ask on WhatsApp"}
+        </a>
+      </div>
+    </article>
+  );
+}
+
 export default function Home() {
   return (
     <main>
       <header className="bg-ink text-glass">
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <span className="font-display text-xl font-bold">{cafe.name}</span>
-          <div className="flex gap-6 text-lg">
+          <div className="flex gap-5 text-lg sm:gap-6">
+            <a href="#dishes" className="hover:text-marigold">Dishes</a>
             <a href="#menu" className="hover:text-marigold">Menu</a>
+            <a href="#order" className="hover:text-marigold">Order</a>
             <a href="#visit" className="hover:text-marigold">Visit</a>
           </div>
         </nav>
@@ -44,11 +84,11 @@ export default function Home() {
               Open from 6 am in Businessman Colony. Eat in, or order on WhatsApp and take it away.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <a href={whatsappLink} className="rounded-full bg-marigold px-7 py-3 font-display text-lg font-bold text-ink">
-                Order on WhatsApp
+              <a href="#order" className="rounded-full bg-marigold px-7 py-3 font-display text-lg font-bold text-ink">
+                Build your order
               </a>
-              <a href="#menu" className="rounded-full border-2 border-glass px-7 py-3 font-display text-lg font-bold">
-                See the menu
+              <a href="#dishes" className="rounded-full border-2 border-glass px-7 py-3 font-display text-lg font-bold">
+                See the dishes
               </a>
             </div>
             <p className="mt-6 text-base text-glass/80">Dine in or take away. 6 am to 2 pm. Closed on Fridays.</p>
@@ -73,8 +113,18 @@ export default function Home() {
         </div>
       </header>
 
-      <section id="menu" className="mx-auto max-w-6xl scroll-mt-4 px-6 py-14 md:py-20">
-        <h2 className="font-display text-3xl font-bold sm:text-4xl md:text-5xl">Menu</h2>
+      <section id="dishes" className="mx-auto max-w-6xl scroll-mt-4 px-6 py-14 md:py-20">
+        <h2 className="font-display text-3xl font-bold sm:text-4xl md:text-5xl">Popular dishes</h2>
+        <p className="mt-3 max-w-xl text-lg">Tap Order this and the dish goes straight into a WhatsApp message.</p>
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {dishes.map((dish) => (
+            <DishCard key={dish.name} dish={dish} />
+          ))}
+        </div>
+      </section>
+
+      <section id="menu" className="mx-auto max-w-6xl scroll-mt-4 px-6 pb-14 md:pb-20">
+        <h2 className="font-display text-3xl font-bold sm:text-4xl md:text-5xl">Full menu</h2>
         <div className="mt-10 grid gap-12 md:grid-cols-2 lg:grid-cols-3">
           {menu.map((group) => (
             <div key={group.title}>
@@ -96,24 +146,7 @@ export default function Home() {
         </div>
       </section>
 
-      {readyPhotos.length >= 3 && (
-        <section className="mx-auto max-w-6xl px-6 pb-14 md:pb-20">
-          <h2 className="font-display text-3xl font-bold sm:text-4xl md:text-5xl">From the counter</h2>
-          <div className="mt-8 columns-2 gap-4 md:columns-3 lg:columns-4">
-            {readyPhotos.map((p) => (
-              <Image
-                key={p.file}
-                src={photoSrc(p)}
-                alt={p.alt}
-                width={p.w}
-                height={p.h}
-                sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
-                className="mb-4 h-auto w-full break-inside-avoid rounded-2xl"
-              />
-            ))}
-          </div>
-        </section>
-      )}
+      <OrderBuilder />
 
       <section id="visit" className="scroll-mt-4 bg-marigold">
         <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-2 md:py-20">
