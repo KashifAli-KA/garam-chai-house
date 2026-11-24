@@ -63,9 +63,9 @@ export default function OrderBuilder() {
 
   return (
     <section id="order" className="mx-auto max-w-6xl scroll-mt-4 px-6 pb-14 md:pb-20">
-      <h2 className="font-display text-3xl font-bold sm:text-4xl md:text-5xl">Build your order</h2>
+      <h2 className="font-display text-3xl font-bold sm:text-4xl md:text-5xl">Menu and order</h2>
       <p className="mt-3 max-w-xl text-lg">
-        Pick your items, choose dine in or take away, and send it on WhatsApp.
+        Pick what you want, choose dine in or take away, and send it on WhatsApp.
       </p>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[1.4fr_1fr]">
@@ -80,7 +80,8 @@ export default function OrderBuilder() {
                     <li key={item.name} className="flex items-center justify-between gap-4 p-4">
                       <div className="min-w-0">
                         <p className="font-display text-lg font-semibold">{item.name}</p>
-                        <p className="text-ink/80">{item.price}</p>
+                        <p className="text-ink/70">{item.note}</p>
+                        <p className="font-semibold">{item.price}</p>
                       </div>
                       <div className="flex shrink-0 items-center gap-3">
                         <button

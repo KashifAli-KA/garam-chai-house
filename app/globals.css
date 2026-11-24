@@ -3,8 +3,8 @@
 @theme inline {
   --color-glass: #e6efea;
   --color-ink: #0f3b3e;
-  --color-marigold: #f4b400;
-  --color-rose: #c8325a;
+  --color-marigold: #dca63a; /* brass */
+  --color-rose: #b8334f;
   --font-display: var(--font-bricolage), sans-serif;
   --font-body: var(--font-source), serif;
 }
@@ -36,4 +36,8 @@ a:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .steam { animation: none; }
+}
+/* Subtle brass lattice, used on the dark teal sections. */
+.pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cpath d='M28 4l24 24-24 24L4 28z' fill='none' stroke='%23dca63a' stroke-opacity='.16' stroke-width='1.5'/%3E%3Cpath d='M28 16l12 12-12 12-12-12z' fill='none' stroke='%23dca63a' stroke-opacity='.16' stroke-width='1.5'/%3E%3C/svg%3E");
 }

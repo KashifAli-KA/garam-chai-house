@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { cafe, menu } from "./content";
+import { cafe } from "./content";
 import { heroPhoto, photoSrc } from "./photos";
 import { dishes, type Dish } from "./dishes";
 import OrderBuilder from "./OrderBuilder";
@@ -19,10 +19,23 @@ function Cup() {
         <path className="steam" d="M120 82c-12-14 12-24 0-40" />
         <path className="steam" d="M150 82c-12-14 12-24 0-40" />
       </g>
-      <path d="M50 105h140v38a62 62 0 0 1-62 62h-16a62 62 0 0 1-62-62z" fill="#f4b400" />
-      <path d="M190 122h12a24 24 0 0 1 0 48h-20" fill="none" stroke="#f4b400" strokeWidth="12" />
-      <ellipse cx="120" cy="222" rx="92" ry="10" fill="#c8325a" />
+      <path d="M50 105h140v38a62 62 0 0 1-62 62h-16a62 62 0 0 1-62-62z" fill="#dca63a" />
+      <path d="M190 122h12a24 24 0 0 1 0 48h-20" fill="none" stroke="#dca63a" strokeWidth="12" />
+      <ellipse cx="120" cy="222" rx="92" ry="10" fill="#b8334f" />
     </svg>
+  );
+}
+
+function Logo() {
+  return (
+    <span className="flex items-center gap-2 font-display text-xl font-bold">
+      <svg viewBox="0 0 32 32" className="h-8 w-8" aria-hidden>
+        <path d="M5 13h18v5a8 8 0 0 1-8 8h-2a8 8 0 0 1-8-8z" fill="#dca63a" />
+        <path d="M23 15h2a3.5 3.5 0 0 1 0 7h-2.5" fill="none" stroke="#dca63a" strokeWidth="2" />
+        <path d="M10 9c-1.5-2 1.5-3 0-5M15 9c-1.5-2 1.5-3 0-5" fill="none" stroke="#e6efea" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+      {cafe.name}
+    </span>
   );
 }
 
@@ -64,13 +77,12 @@ function DishCard({ dish }: { dish: Dish }) {
 export default function Home() {
   return (
     <main>
-      <header className="bg-ink text-glass">
+      <header className="pattern bg-ink text-glass">
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-          <span className="font-display text-xl font-bold">{cafe.name}</span>
+          <Logo />
           <div className="flex gap-5 text-lg sm:gap-6">
             <a href="#dishes" className="hover:text-marigold">Dishes</a>
-            <a href="#menu" className="hover:text-marigold">Menu</a>
-            <a href="#order" className="hover:text-marigold">Order</a>
+            <a href="#order" className="hover:text-marigold">Menu</a>
             <a href="#visit" className="hover:text-marigold">Visit</a>
           </div>
         </nav>
@@ -123,28 +135,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="menu" className="mx-auto max-w-6xl scroll-mt-4 px-6 pb-14 md:pb-20">
-        <h2 className="font-display text-3xl font-bold sm:text-4xl md:text-5xl">Full menu</h2>
-        <div className="mt-10 grid gap-12 md:grid-cols-2 lg:grid-cols-3">
-          {menu.map((group) => (
-            <div key={group.title}>
-              <h3 className="font-display text-2xl font-bold text-rose">{group.title}</h3>
-              <ul className="mt-5 space-y-5">
-                {group.items.map((item) => (
-                  <li key={item.name}>
-                    <div className="flex items-baseline gap-3 font-display text-lg font-semibold sm:text-xl">
-                      <span className="min-w-0">{item.name}</span>
-                      <span aria-hidden className="min-w-4 flex-1 border-b-2 border-dotted border-ink/40" />
-                      <span className="shrink-0 whitespace-nowrap">{item.price}</span>
-                    </div>
-                    <p className="text-ink/80">{item.note}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
 
       <OrderBuilder />
 
@@ -175,7 +165,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="bg-ink px-6 py-8 text-center text-glass">
+      <footer className="pattern bg-ink px-6 py-8 text-center text-glass">
         <p>{cafe.name}, {cafe.city}</p>
         <p className="mt-2 text-sm text-glass/70">Demo project by Kashif Ali, not a real business.</p>
       </footer>
